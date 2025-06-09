@@ -30,4 +30,8 @@ def moment2ellipticity(ixx, iyy, ixy):
     return e1, e2, T
     
 
+def filter_source_table(source_table):
 
+    source_table = source_table[((source_table['calib_psf_used']==True) | (source_table['calib_psf_reserved']==True))]
+
+    return source_table

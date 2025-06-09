@@ -1,6 +1,13 @@
+import numpy as np
+
 from lsst.obs.lsst import LsstCam
 import lsst.afw.cameraGeom as afwCameraGeom
 
+def visit_to_date(visit_arr):
+    v = visit_arr.astype(str)
+    date = [visit[0:8] for visit in v]
+    return date
+    
 def pixel_to_focal(x, y, detid):
     """
     Parameters
@@ -16,14 +23,14 @@ def pixel_to_focal(x, y, detid):
         focal plane position in millimeters in DVCS
         See https://lse-349.lsst.io/
     """
-    det = LSSTCam[detid]
+    det = LsstCam.getCamera()[detid]
     
     tx = det.getTransform(afwCameraGeom.PIXELS, afwCameraGeom.FOCAL_PLANE)
     fpx, fpy = tx.getMapping().applyForward((x, y))    
 
     return fpx, fpy
 
-
+    
 def detector_type(detectors):
     """
     Parameters
