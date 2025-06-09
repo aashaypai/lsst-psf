@@ -201,5 +201,4 @@ token.txt
 catalogs
 
 # script outputs
-psf_catalog_output.txt
-psf_catalog_error.txt
+scripts/*.txt
