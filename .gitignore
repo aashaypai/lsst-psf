@@ -199,6 +199,7 @@ token.txt
 
 # directories
 catalogs
+notebooks
 
 # script outputs
 scripts/*.txt
