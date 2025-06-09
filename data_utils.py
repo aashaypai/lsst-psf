@@ -1,18 +1,19 @@
 from lsst.summit.utils import ConsDbClient
+from lsst.daf.butler import Butler
 
 def get_exp_catalog(save=False, username=None, token=None):
     """
     Parameters
     ----------
-    save : bool, default False
-        option to save exposure catalog
+    save : bool, optional
+        option to save exposure catalog, default False
 
-    username : str, default None
-        username on USDF 
+    username : str, optional
+        username on USDF, default None
         (required if running the script as a job)
         
-    token : str, default None
-        token to used to access ConsDB 
+    token : str, optional
+        token to used to access ConsDB, default None
         (required if running the script as a job)
     Returns
     -------
@@ -45,4 +46,47 @@ def get_exp_catalog(save=False, username=None, token=None):
         
     return consdb
 
+def initialize_butler(butler_dict=None):
+    """
+    Parameters
+    ----------
+    butler_dict : dict, optional 
+        dictionary containing three keys: 'repo', 'collections', 'instrument'
+        used to initialize Butler object. Default is None.
 
+    Returns
+    -------
+    butler : lsst.daf.butler.Butler 
+        butler used to query data products
+    """
+    if butler_dict is None:
+        repo = "/repo/embargo_new" 
+        collections = ['LSSTCam/runs/DRP/20250420_20250521/w_2025_21/DM-51076']
+        instrument = "LSSTCam"
+    else:
+        repo = butler_dict['repo']
+        collections = butler_dict['collections']
+        instrument = butler_dict['instrument']
+    
+    butler = Butler(
+            repo, 
+            collections=collections,
+            instrument=instrument)
+
+    return butler
+    
+def get_dataset_refs(data_product):
+    """
+    Parameters
+    ----------
+    data_product : str
+        name of data product to be queried
+
+    Return 
+    ------
+    dataset_refs : list
+        list of butler dataset references in the given butler collection
+    """
+    dataset_refs = butler.query_datasets(data_product, find_first=True, limit=1000000)
+
+    return dataset_refs
