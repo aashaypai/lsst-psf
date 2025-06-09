@@ -15,6 +15,18 @@ butler_dict = dict(repo = "/repo/embargo_new",
 butler = du.initialize_butler(butler_dict=butler_dict)
 
 ## get dataset refs to the Piff PSF catalog
-dataset_refs = du.get_dataset_refs(data_product='refit_psf_star')
+dataset_refs = du.get_dataset_refs(butler, data_product='refit_psf_star')
+
+## read token for ConsDB
+with open("token.txt", "r") as file:
+    token = file.readline()
 
 
+
+## get exposure catalog from ConsDB
+consdb = du.get_exposure_catalog(username='pai', token=token)
+
+
+## get exposure ids from dataset refs
+for i, ref in enumerate(dataset_refs):
+    expid = ref.dataId['visit']

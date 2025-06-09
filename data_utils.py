@@ -1,7 +1,7 @@
 from lsst.summit.utils import ConsDbClient
 from lsst.daf.butler import Butler
 
-def get_exp_catalog(save=False, username=None, token=None):
+def get_exposure_catalog(save=False, username=None, token=None):
     """
     Parameters
     ----------
@@ -75,10 +75,12 @@ def initialize_butler(butler_dict=None):
 
     return butler
     
-def get_dataset_refs(data_product):
+def get_dataset_refs(butler, data_product):
     """
     Parameters
     ----------
+    butler : lsst.daf.butler.Butler 
+        initialized butler object used to query
     data_product : str
         name of data product to be queried
 
