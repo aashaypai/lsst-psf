@@ -33,7 +33,7 @@ def main(username, collection):
     consdb = du.get_exposure_catalog(username = username, token = token)
     
     ## make PSF catalog
-    psf_catalog = pc.make_psf_catalog(dataset_refs = dataset_refs[:10],
+    psf_catalog = pc.make_psf_catalog(dataset_refs = dataset_refs,
                                    consdb = consdb,
                                    butler = butler)
 
