@@ -33,7 +33,7 @@ def make_psf_catalog(dataset_refs, consdb, butler):
     
     psf_catalog = QTable()
     
-    for i, ref in enumerate(dataset_refs[:20]):
+    for i, ref in enumerate(dataset_refs):
         if i % 10 == 0:
             print(i, flush=True)
         expid = ref.dataId['visit']
@@ -54,8 +54,8 @@ def make_psf_catalog(dataset_refs, consdb, butler):
             instflux_err = source_table['slot_CalibFlux_instFluxErr']
             calibflux = source_table['slot_CalibFlux_flux']
             calibflux_err = source_table['slot_CalibFlux_fluxErr']
-            calibflux_mag = source_table['slot_CalibFlux_mag']
-            calibflux_magerr = source_table['slot_CalibFlux_magErr']
+            calibmag = source_table['slot_CalibFlux_mag']
+            calibmag_err = source_table['slot_CalibFlux_magErr']
             #ConsDB data 
             index = np.where(consdb['exposure_id'] == expid)
     
@@ -102,7 +102,8 @@ def make_psf_catalog(dataset_refs, consdb, butler):
             #concatenate vertically to the final PSF catalog
             columns = [source_id, ra, dec, mjd, pixel_x, pixel_y, fp_x, fp_y, exposure, date, 
                           detector, det_type_itl, det_type_e2v, band, used, reserved, e1, e2, T, 
-                          model_e1, model_e2, model_T, flux, flux_err, seeing, airmass, 
+                          model_e1, model_e2, model_T, instflux, instflux_err, calibflux, 
+                       calibflux_err, calibmag, calibmag_err, seeing, airmass, 
                           humidity, pressure, air_temp, wind_speed, wind_dir, obs_reason]
             
             tab = QTable(data=columns,
