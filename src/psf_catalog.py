@@ -13,24 +13,27 @@ os.makedirs(os.path.dirname(SAVE_DIR), exist_ok=True)
 
 COLNAMES = ['source_id', 'ra', 'dec',  'mjd', 'slot_px_x', 'slot_px_y', 'fp_x', 'fp_y', 'visit', 'date',
             'detector', 'det_is_itl', 'det_is_e2v', 'band', 'psf_used', 'psf_reserved', 'e1', 'e2', 'T',
-            'model_e1', 'model_e2', 'model_T','model_flux', 'model_flux_err', 'seeing', 'airmass',
+            'model_e1', 'model_e2', 'model_T','calib_instflux', 'calib_instflux_err', 'calib_flux',
+            'calib_flux_err', 'calib_mag', 'calib_mag_err', 'seeing', 'airmass',
             'humidity', 'pressure', 'air_temp', 'wind_speed', 'wind_dir', 'obs_reason']
 
 DTYPES = ['i8', 'f8', 'f8', 'f8', 'f4', 'f4', 'f4', 'f4', 'i8', 'i4', 
           'i4', 'i4', 'i4', 'S1', 'i4', 'i4', 'f4', 'f4', 'f4', 
-          'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 
+          'f4', 'f4', 'f4', 'f4', 'f4', 'f4', 
+          'f4', 'f4', 'f4', 'f4', 'f4', 
           'f4', 'i4', 'f4', 'f4', 'f4', 'S32']
 
 UNITS = [None, u.deg, u.deg, None, u.pixel, u.pixel, u.mm, u.mm, None, None, 
          None, None, None, None, None, None, None, None, u.pixel**2, 
-         None, None, u.pixel**2, u.ct, u.ct, None, None,
+         None, None, u.pixel**2, u.ct, u.ct, u.nJy,
+         u.nJy, u.ABmag, u.ABmag, None, None,
          None, None, None, None, None, None]
 
 def make_psf_catalog(dataset_refs, consdb, butler):
     
     psf_catalog = QTable()
     
-    for i, ref in enumerate(dataset_refs):
+    for i, ref in enumerate(dataset_refs[:20]):
         if i % 10 == 0:
             print(i, flush=True)
         expid = ref.dataId['visit']
@@ -47,8 +50,12 @@ def make_psf_catalog(dataset_refs, consdb, butler):
                                                                 source_table['slot_PsfShape_yy'],
                                                                 source_table['slot_PsfShape_xy'])
             
-            flux = source_table['slot_ModelFlux_instFlux']
-            flux_err = source_table['slot_ModelFlux_instFluxErr']
+            instflux = source_table['slot_CalibFlux_instFlux']
+            instflux_err = source_table['slot_CalibFlux_instFluxErr']
+            calibflux = source_table['slot_CalibFlux_flux']
+            calibflux_err = source_table['slot_CalibFlux_fluxErr']
+            calibflux_mag = source_table['slot_CalibFlux_mag']
+            calibflux_magerr = source_table['slot_CalibFlux_magErr']
             #ConsDB data 
             index = np.where(consdb['exposure_id'] == expid)
     
