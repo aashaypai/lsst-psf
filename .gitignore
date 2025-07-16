@@ -200,6 +200,7 @@ token.txt
 # directories
 catalogs
 notebooks
+plots
 
 # script outputs
 scripts/*.txt
